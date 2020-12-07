@@ -1,0 +1,10 @@
+citationMetrics.pgf
+cv_en.aux
+cv_en.log
+cv_en.out
+cv_en.pdf
+publications_gs.tex
+*.fls
+*.fdb_latexmk
+*synctex.gz
+*.jpg

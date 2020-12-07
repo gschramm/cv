@@ -1,0 +1,183 @@
+%% start of file `template.tex'.
+%% Copyright 2006-2012 Xavier Danaux (xdanaux@gmail.com).
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License version 1.3c,
+% available at http://www.latex-project.org/lppl/.
+
+
+\documentclass[10pt,a4paper,sans]{moderncv}   % possible options include font size ('10pt', '11pt' and '12pt'), 
+                                              % paper size ('a4paper', 'letterpaper', 'a5paper', 'legalpaper', 
+                                              % 'executivepaper' and 'landscape') and font family ('sans' and 'roman')
+
+% moderncv themes
+\moderncvstyle{classic}                        % style options are 'casual' (default) and 'classic' 
+\moderncvcolor{blue}                          % color options 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
+
+% character encoding
+\usepackage[utf8]{inputenc}
+\DeclareUnicodeCharacter{2032}{$^\prime$}
+
+% adjust the page margins
+\usepackage[scale=0.8]{geometry}
+\usepackage[english]{babel}
+%\usepackage{mathptmx}
+\usepackage[sfdefault,light]{roboto}
+\usepackage{pgf}
+
+\setlength{\hintscolumnwidth}{3.5cm}          % Breite links
+\setlength{\separatorcolumnwidth}{0.75cm}     % Abstand 
+\setlength{\maincolumnwidth}{7.0cm}             % Breite rechts
+
+% personal data
+\firstname{Georg}
+\familyname{\textsc{Schramm}}
+\address{Hollestraat 20 bus 0202}{3001 Heverlee, Belgium} % optional, remove the line if not wanted
+\phone{+49~176~23483403}                         % optional, remove the line if not wanted
+\email{georg.schramm@posteo.net}                 % optional, remove the line if not wanted
+\homepage{joris.uber.space}                      % optional, remove the line if not wanted
+
+
+\renewcommand\sectionfont{\Large\sffamily}
+
+%----------------------------------------------------------------------------------
+\begin{document}
+
+%\input{coverletter}
+
+\maketitle
+
+\section{Personal Details}
+\cvitem{date of birth}{08 April 1987}
+\cvitem{place of birth}{G\"orlitz, Germany}
+\cvitem{nationality}{German}
+
+
+\section{Education}
+\cventry{Jan 2015}{PhD in medical imaging}
+        {}{}{TU Dresden, Germany}{Thesis: "Evaluation and Improvement of MR-based attenuation 
+                                  correction in PET/MRI." \\ final mark: summa cum laude}
+        %{}{}{ \\
+        %     topic: }
+\cventry{Apr 2011}{Master in (nuclear and particle) physics}
+        {}{}{TU Dresden, Germany}
+        {Thesis: "Simulation and analysis of neutron capture and photon scattering experiments."}
+%\cventry{Sep 1997 - Jun 2005}{Abitur (equivalent to A-levels)}{Augustum Annengymnasium G\"orlitz, Germany}
+%{}{}{final mark: 1.1}
+
+
+\section{Experiences}
+\cventry{since Apr 2015}{Postdoctoral researcher}{}{KU Leuven, Belgium, Department of Imaging and 
+                                                    Pathology, Division of Nuclear Medicine}
+        {}
+        {As a PostDoc in the lab of Prof. Johan Nuyts, I am investigating
+        joint advanced method for iterative PET image reconstruction and the application
+        of deep learning in PET reconstruction and image analysis.
+        Moreover, I am heavily interested and involved in the translation of our research
+        into clinical routine.}
+\cventry{Jan 2015 - Mar 2015}{Scientist}{}{Helmholtz-Zentrum Dresden-Rossendorf (HZDR), Institute
+                                  for Radiopharmaceutical Cancer Research}
+        {}{}
+\cventry{May 2011 - Jan 2015}{PhD student}{}{HZDR, Institute
+                                  for Radiopharmaceutical Cancer Research}
+        {}
+        {As a PhD student in the lab of Prof. J\"org van den Hoff, I was evaluating
+         and improving whole-body MR-based attenuation correction using one of
+         the first combined PET/MR systems world-wide.}
+\cventry{since Apr 2019}{Active member in the KU Leuven PostDoc Society}{}{}{}
+        {I am involved in organizing career and networking events for PostDocs and
+         in the preparation of a PostDoc charta for KU Leuven.}
+
+\cventry{Apr 2013 - Feb 2015}{member of the management board of Werkstatt BigBand Dresden e.V.}{}{}{}
+       {In our student big band, I was organizing concerts, rehearsal weekends and finances.}
+
+
+\cventry{Sep 2009 - Mar 2010}{Semester abroad}{}{University of Sheffield, UK}
+        {}
+        {During my Erasmus semester in Sheffield, I was studying astronomy and applied mathematics}
+\cventry{Aug 2008 - Jul 2009}{Student research assistant}{}{HZDR Institute of Radiation Physics}
+        {}{As an assistant, I was analysing neutron TOF and tranmission data and typesetting
+        a lecture manuscript in latex.}
+
+%----------------------------------------------------------------------------------
+
+\section{Language Skills}
+\cvitem{German}{native}
+\cvitem{English}{fluent}
+\cvitem{Dutch}{basic}
+
+%----------------------------------------------------------------------------------
+\newpage
+
+\section{Teaching}
+\cvitem{since 2017}{Techniques and technologies in Nuclear Medicine (assistant for Prof. J.~Nuyts)}
+\cvitem{since 2017}{Medical Imaging (assistant for Prof. P.~Suetens and Prof. F.~Maes)}
+
+
+%----------------------------------------------------------------------------------
+
+\section{Awards}
+\cventry{Nov 2019}{Best Poster Award 2nd place}
+{}{}{}{Synergistic Reconstruction Symposium, Chester}
+\cventry{Mar 2015}{PhD Award}
+{}{}{}{Yearly award for the best PhD thesis at HZDR}
+\cventry{Mar 2014}{Award for notable achievements in nuclear medicine imaging}
+{}{}{}{German Society of Nuclear Medicine}
+\cventry{Mar 2014}{Travel grant for RSNA 2014 for the best oral presentation of 
+a young investigator.}
+{}{}{}{Annual meeting of the German Society of Nuclear Medicine}
+\cventry{May 2012}{Award for the best oral presentation of 
+a young investigator.}{}{}{}{International conference on PET/MRI and SPECT/MRI. La Biodola, Italy}
+\cventry{Jan 2012}{Ehrenfried Walter von Tschirnhaus Urkunde}{}
+{}{}{Yearly given to the five best graduates of the faculty of science at TU Dresden}
+
+%----------------------------------------------------------------------------------
+
+\section{Invited Talks}
+\cventry{Nov 2019}{State of the art of AI for medical image
+reconstruction and corrections}{}{}{}
+{IEEE MIC 2019 workshop: Emergence and perspectives of artificial intelligence (AI) methods in radiation-based imaging sciences, Manchester}
+\cventry{Oct 2017}{MR-based attenuation correction for the body}{}{}{}
+{Annual congress of the European Association for Nuclear Medicine, Vienna}
+\cventry{Sep 2017}{Positron Emission Tomography - an introduction and overview about current developments}{}{}{}
+{International workshop on positron studies on defects 2017, Dresden}
+
+%----------------------------------------------------------------------------------
+
+\section{Research Interests}
+\cvitem{PET}{PET image reconstruction}
+\cvitem{}{quantitative PET imaging}
+\cvitem{}{PET image analysis}
+\cvitem{}{hybrid PET/MR imaging}
+\cvitem{}{Deep learning in medical image reconstruction and analysis}
+\cvitem{Reviewer for}{J Nucl Med, Eur J Nucl Med, IEEE TMI, Eur J Nucl Med Phys}
+
+%----------------------------------------------------------------------------------
+
+\section{Skills}
+\cvitem{programming}{Python, keras, tensorflow, IDL, matlab, R, C, C++, bash, git, cmake, openmp}
+\cvitem{mathematics}{numerics, inverse problems and convex optimization in medical imaging}
+\cvitem{clinical PET imaging}{more than 8 years of experience in clinical operation of a PET/MRI scanner}
+
+%----------------------------------------------------------------------------------
+
+
+\bigskip
+\bigskip
+
+\begin{flushright}
+Leuven, \today
+\end{flushright}
+
+\newpage
+
+%Publikationsliste
+\input{publications_gs.tex}
+
+\bigskip
+
+%\begin{center}
+%\input{./citationMetrics.pgf}
+%\end{center}
+
+\end{document}
