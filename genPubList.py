@@ -1,10 +1,6 @@
 from bibtexparser.bparser import BibTexParser
 import unicodedata
 
-# redirect print to file
-import sys
-sys.stdout = open("publications_gs.tex", "w")
-
 def convertStr(string):
     if type(string) != str: uni = string.decode('unicode-escape')
     else: uni = string
@@ -36,17 +32,21 @@ def printArticles(d):
     for key in sortedkeys:
         print('\\vbox{')
         print(formatAuthors(d[key]['author']), '\\\\')
-        print(d[key]['title'], '\\\\')
+        print(f'\\textit{{{d[key]["title"]}}} \\\\')
         print(d[key]['journal'])
         if('volume' in d[key]): 
             vstr = d[key]['volume']
             if('pages' in d[key]):
                 vstr = vstr + ':' + d[key]['pages']
             print(vstr)
+        if 'doi' in d[key]:
+          doi_link = f'\\href{{https://doi.org/{d[key]["doi"]}}}{{\\color{{color1}}{{DOI link}}}}'
+          print(doi_link)
         print('(' + d[key]['year'] + ')', '\\\\')
         print('}')
         print('')
 
+#---------------------------------------------------------------------------
 
 fname = 'citations.bib'
 
@@ -58,14 +58,22 @@ allarticles = bp.get_entry_dict()
 
 
 myarticles = {}
+lastarticles = {}
 coarticles = {}
 
 for x in list(allarticles.keys()): 
   if allarticles[x]['ENTRYTYPE'] == 'article':
-    if allarticles[x]['author'].split(',')[0] == 'Schramm': myarticles[x] = allarticles[x]
-    else: coarticles[x] = allarticles[x]
+    all_authors = [x.strip() for x in allarticles[x]['author'].split('and')]
+    if all_authors[0].startswith('Schramm'): 
+      myarticles[x] = allarticles[x]
+    elif all_authors[-1].startswith('Schramm'): 
+      lastarticles[x] = allarticles[x]
+    else: 
+      coarticles[x] = allarticles[x]
 
-print('\\section{First author publications}', '\n')
+print('\\section{First author peer-reviewed journal articles}', '\n')
 printArticles(myarticles)
-print('\\section{Co-author publications}', '\n')
+print('\\section{Last author peer-reviewed journal articles}', '\n')
+printArticles(lastarticles)
+print('\\section{Co-author peer-reviewed journal articles}', '\n')
 printArticles(coarticles)
