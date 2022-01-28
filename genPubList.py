@@ -23,40 +23,56 @@ def formatAuthors(s):
 
     return sss
     
-def printArticles(d):
+def printArticles(d, f):
     keys = list(d.keys())
     year = [d[x]['year'] for x in keys]
 
     sortedkeys = [x for (y,x) in sorted(zip(year,keys))][::-1]
  
     for key in sortedkeys:
-        print('\\vbox{')
-        print(formatAuthors(d[key]['author']), '\\\\')
-        print(f'\\textit{{{d[key]["title"]}}} \\\\')
-        print(d[key]['journal'])
+        print('\\vbox{', file = f)
+        print(formatAuthors(d[key]['author']), '\\\\', file = f)
+        print(f'\\textit{{{d[key]["title"]}}} \\\\', file = f)
+        print(d[key]['journal'], file = f)
         if('volume' in d[key]): 
             vstr = d[key]['volume']
             if('pages' in d[key]):
                 vstr = vstr + ':' + d[key]['pages']
-            print(vstr)
+            print(vstr, file = f)
         if 'doi' in d[key]:
           doi_link = f'\\href{{https://doi.org/{d[key]["doi"]}}}{{\\color{{color1}}{{DOI link}}}}'
-          print(doi_link)
-        print('(' + d[key]['year'] + ')', '\\\\')
-        print('}')
-        print('')
+          print(doi_link, file = f)
+        print('(' + d[key]['year'] + ')', '\\\\', file = f)
+        print('}', file = f)
+        print('', file = f)
+
+def printProceedings(d, f):
+    keys = list(d.keys())
+    year = [d[x]['year'] for x in keys]
+
+    sortedkeys = [x for (y,x) in sorted(zip(year,keys))][::-1]
+ 
+    for key in sortedkeys:
+        if 'conference' in d[key]:
+          print('\\vbox{', file = f)
+          print(formatAuthors(d[key]['author']), '\\\\', file = f)
+          print(f'\\textit{{{d[key]["title"]}}} \\\\', file = f)
+          print(d[key]['conference'], file = f)
+          if 'doi' in d[key]:
+            doi_link = f'\\href{{https://doi.org/{d[key]["doi"]}}}{{\\color{{color1}}{{DOI link}}}}'
+            print(doi_link, file = f)
+          print('(' + d[key]['year'] + ')', '\\\\', file = f)
+          print('}', file = f)
+          print('', file = f)
 
 #---------------------------------------------------------------------------
 
-fname = 'citations.bib'
-
-bibfile = open(fname,'r')
-bp = BibTexParser(bibfile.read())
-bibfile.close()
-
+# read all articles
+with open('articles.bib','r') as bibfile:
+  bp = BibTexParser(bibfile.read())
 allarticles = bp.get_entry_dict()
 
-
+# split articles into first, last, co-author
 myarticles = {}
 lastarticles = {}
 coarticles = {}
@@ -71,9 +87,17 @@ for x in list(allarticles.keys()):
     else: 
       coarticles[x] = allarticles[x]
 
-print('\\section{First author peer-reviewed journal articles}', '\n')
-printArticles(myarticles)
-print('\\section{Last author peer-reviewed journal articles}', '\n')
-printArticles(lastarticles)
-print('\\section{Co-author peer-reviewed journal articles}', '\n')
-printArticles(coarticles)
+# read all proceedings
+with open('proceedings.bib','r') as bibfile:
+  bpc = BibTexParser(bibfile.read())
+allprocs = bpc.get_entry_dict()
+
+with open('publications_gs.tex', 'w') as f:
+  print('\\section{First author peer-reviewed journal articles}', '\n', file = f)
+  printArticles(myarticles, f)
+  print('\\section{Last author peer-reviewed journal articles}', '\n', file = f)
+  printArticles(lastarticles, f)
+  print('\\section{Co-author peer-reviewed journal articles}', '\n', file = f)
+  printArticles(coarticles, f)
+  print('\\section{Conference proceedings}', '\n', file = f)
+  printProceedings(allprocs, f)
