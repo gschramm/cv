@@ -43,7 +43,7 @@ def printArticles(d, f):
           doi_link = f'\\href{{https://doi.org/{d[key]["doi"]}}}{{\\color{{color1}}{{DOI link}}}}'
           print(doi_link, file = f)
         print('(' + d[key]['year'] + ')', '\\\\', file = f)
-        print('}', file = f)
+        print('} \\smallskip', file = f)
         print('', file = f)
 
 def printProceedings(d, f):
@@ -62,7 +62,7 @@ def printProceedings(d, f):
             doi_link = f'\\href{{https://doi.org/{d[key]["doi"]}}}{{\\color{{color1}}{{DOI link}}}}'
             print(doi_link, file = f)
           print('(' + d[key]['year'] + ')', '\\\\', file = f)
-          print('}', file = f)
+          print('} \\smallskip', file = f)
           print('', file = f)
 
 #---------------------------------------------------------------------------
