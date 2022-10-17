@@ -1,103 +1,98 @@
+import urllib.request
+import bibtexparser
 from bibtexparser.bparser import BibTexParser
-import unicodedata
+from bibtexparser.customization import *
 
-def convertStr(string):
-    if type(string) != str: uni = string.decode('unicode-escape')
-    else: uni = string
+def customizations(record):
+    """Use some functions delivered by the library
 
-    return unicodedata.normalize('NFKD',uni).encode('ascii','ignore')
+    :param record: a record
+    :returns: -- customized record
+    """
+    record = type(record)
+    record = homogenize_latex_encoding(record)
+    record = author(record)
+    record = editor(record)
+    record = journal(record)
+    record = keyword(record)
+    record = link(record)
+    record = page_double_hyphen(record)
+    record = doi(record)
+    return record
 
-def formatAuthors(s):
-    ss  = s.split(' and ')
-    others = False
-    while 'others' in ss: 
-        ss.remove('others')
-        others = True
-    while 'Others' in ss: 
-        ss.remove('Others')
-        others = True
-    sss = [x.split(', ')[1][0] + ' ' + x.split(', ')[0] for x in ss]
-    sss = ', '.join(sss)
+def format_author_list(author_list: list[str]) -> str:
+    return ', '.join([f'{x.split(", ")[1]} {x.split(", ")[0]}' for x in author_list])
 
-    if(others): sss = sss + ' et al.'
-
-    return sss
-    
-def printArticles(d, f):
-    keys = list(d.keys())
-    year = [d[x]['year'] for x in keys]
-
-    sortedkeys = [x for (y,x) in sorted(zip(year,keys))][::-1]
- 
-    for key in sortedkeys:
+def printArticles(entry_list, f):
+    for d in entry_list:
         print('\\vbox{', file = f)
-        print(formatAuthors(d[key]['author']), '\\\\', file = f)
-        print(f'\\textit{{{d[key]["title"]}}} \\\\', file = f)
-        print(d[key]['journal'], file = f)
-        if('volume' in d[key]): 
-            vstr = d[key]['volume']
-            if('pages' in d[key]):
-                vstr = vstr + ':' + d[key]['pages']
+        print(format_author_list(d['author']), '\\\\', file = f)
+        title = d['title'].replace('\gamma','$\gamma$')
+        print(f'\\textit{{{title}}} \\\\', file = f)
+        print(d['journal']['name'], file = f)
+        if('volume' in d): 
+            vstr = d['volume']
+            if('pages' in d):
+                vstr = vstr + ':' + d['pages']
             print(vstr, file = f)
-        if 'doi' in d[key]:
-          doi_link = f'\\href{{https://doi.org/{d[key]["doi"]}}}{{\\color{{color1}}{{DOI link}}}}'
+        if 'doi' in d:
+          doi_link = f'\\href{{https://doi.org/{d["doi"]}}}{{\\color{{color1}}{{DOI link}}}}'
           print(doi_link, file = f)
-        print('(' + d[key]['year'] + ')', '\\\\', file = f)
+        print('(' + d['year'] + ')', '\\\\', file = f)
         print('} \\smallskip', file = f)
         print('', file = f)
 
-def printProceedings(d, f):
-    keys = list(d.keys())
-    year = [d[x]['year'] for x in keys]
 
-    sortedkeys = [x for (y,x) in sorted(zip(year,keys))][::-1]
- 
-    for key in sortedkeys:
-        if 'conference' in d[key]:
-          print('\\vbox{', file = f)
-          print(formatAuthors(d[key]['author']), '\\\\', file = f)
-          print(f'\\textit{{{d[key]["title"]}}} \\\\', file = f)
-          print(d[key]['conference'], file = f)
-          if 'doi' in d[key]:
-            doi_link = f'\\href{{https://doi.org/{d[key]["doi"]}}}{{\\color{{color1}}{{DOI link}}}}'
-            print(doi_link, file = f)
-          print('(' + d[key]['year'] + ')', '\\\\', file = f)
-          print('} \\smallskip', file = f)
-          print('', file = f)
+def printProceedings(entry_list, f):
+    for d in entry_list:
+        if 'conference' in d:
+            print('\\vbox{', file = f)
+            print(format_author_list(d['author']), '\\\\', file = f)
+            print(f'\\textit{{{d["title"]}}} \\\\', file = f)
+            print(d['conference'], file = f)
+            if 'doi' in d:
+                doi_link = f'\\href{{https://doi.org/{d["doi"]}}}{{\\color{{color1}}{{DOI link}}}}'
+                print(doi_link, file = f)
+            print('(' + d['year'] + ')', '\\\\', file = f)
+            print('} \\smallskip', file = f)
+            print('', file = f)
 
-#---------------------------------------------------------------------------
 
-# read all articles
-with open('articles.bib','r') as bibfile:
-  bp = BibTexParser(bibfile.read())
-allarticles = bp.get_entry_dict()
+#-------------------------------------------------------------------------------------------
 
-# split articles into first, last, co-author
-myarticles = {}
-lastarticles = {}
-coarticles = {}
+if __name__ == '__main__':
 
-for x in list(allarticles.keys()): 
-  if allarticles[x]['ENTRYTYPE'] == 'article':
-    all_authors = [x.strip() for x in allarticles[x]['author'].split('and')]
-    if all_authors[0].startswith('Schramm'): 
-      myarticles[x] = allarticles[x]
-    elif all_authors[-1].startswith('Schramm'): 
-      lastarticles[x] = allarticles[x]
-    else: 
-      coarticles[x] = allarticles[x]
+    # download bibtex file of articles
+    urllib.request.urlretrieve('https://raw.githubusercontent.com/gschramm/gschramm.github.io/master/_bibliography/papers.bib', 'articles.bib')
 
-# read all proceedings
-with open('proceedings.bib','r') as bibfile:
-  bpc = BibTexParser(bibfile.read())
-allprocs = bpc.get_entry_dict()
+    with open('articles.bib', 'r') as bibtex_file:
+        parser = BibTexParser()
+        parser.customization = customizations
+        bib_database = bibtexparser.load(bibtex_file, parser=parser)
+    
+        first_author_entries = []
+        last_author_entries = []
+        co_author_entries = []
+    
+        for x in bib_database.entries:
+            if x['author'][0].startswith('Schramm, G'):
+                first_author_entries.append(x)
+            elif x['author'][-1].startswith('Schramm, G'):
+                last_author_entries.append(x)
+            else:
+                co_author_entries.append(x)
 
-with open('publications_gs.tex', 'w') as f:
-  print('\\section{First author peer-reviewed journal articles}', '\n', file = f)
-  printArticles(myarticles, f)
-  print('\\section{Last author peer-reviewed journal articles}', '\n', file = f)
-  printArticles(lastarticles, f)
-  print('\\section{Co-author peer-reviewed journal articles}', '\n', file = f)
-  printArticles(coarticles, f)
-  print('\\section{Conference proceedings}', '\n', file = f)
-  printProceedings(allprocs, f)
+    with open('proceedings.bib', 'r') as bibtex_file:
+        parser = BibTexParser()
+        parser.customization = customizations
+        proc_database = bibtexparser.load(bibtex_file, parser=parser)
+    
+    with open('publications_gs.tex', 'w') as f:
+        print('\\section{First author peer-reviewed journal articles}', '\n', file = f)
+        printArticles(first_author_entries, f)
+        print('\\section{Last author peer-reviewed journal articles}', '\n', file = f)
+        printArticles(last_author_entries, f)
+        print('\\section{Co-author peer-reviewed journal articles}', '\n', file = f)
+        printArticles(co_author_entries, f)
+        print('\\section{Conference proceedings}', '\n', file = f)
+        printProceedings(proc_database.entries, f)
